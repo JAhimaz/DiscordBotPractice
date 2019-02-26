@@ -3,14 +3,14 @@ const { prefix, token } = require('./config.json');
 const bot = new Discord.Client();
 
 bot.on('message', async message => {
-  if(message.author.bot) return; //Ignores itself
+  if(!message.content.startsWith(prefix) || message.author.bot) return; //Ignores itself
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
-  if(message.content === `${prefix}server`){
+  if(command === "server"){
     message.channel.send(`Server Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}`);
-  } else if(message.content === `${prefix}owner`){
+  } else if(command === "owner"){
     message.reply(`The Owner Of The Server is ${message.author.username}`);
   }
   if(command === "purge") {
