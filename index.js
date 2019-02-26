@@ -24,8 +24,10 @@ bot.on('message', async message => {
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const commandName = args.shift().toLowerCase();
 
-  if (!bot.commands.has(commandName)) return;
-  const command = bot.commands.get(commandName);
+  const command = bot.commands.get(commandName)
+  || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+  if (!command) return;
   //Error Checking
   if (command.guildOnly && message.channel.type !== 'text') {
 	   return message.reply(`Sorry Babe, I know you like to slide into my DM\'s but I can\'t do that here.\nI Only Works In Servers, Please Feel Free To Add Me To One (I'm Lonely, Please...)`);
@@ -66,8 +68,14 @@ bot.on('message', async message => {
 });
 
 bot.once('ready', () => {
+  console.log(`Loading Commands\n------------------`);
+  for (const file of commandFiles) {
+    let fileName = file.slice(0, file.length-3);
+    console.log(`Loaded ${prefix}${fileName}`);
+  } console.log(`------------------`);
   console.log(`Bot has started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} guilds.`);
-  bot.user.setGame(`with girls feelings | ${prefix}help`);
+  console.log(`~~ Thanks For Using ServeBot! @Joshhh`);
+  bot.user.setActivity(`around with JS | ${prefix}help`);
 })
 
 bot.login(token);
