@@ -16,4 +16,6 @@ Currently Features:
 > Server
 > Purge
 > Donate
+> Flip
+> Roll
 ```
