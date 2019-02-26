@@ -9,6 +9,7 @@ Default Prefix is: ! (Adding ability to change prefix)
 
 Currently Features:
 ```
+> Help
 > Hello
 > Avatar
 > Owner
