@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'avatar',
+  cooldown: 5,
 	description: 'Used to give the URL to an avatar',
   guildOnly: true,
 	execute(message, args) {
