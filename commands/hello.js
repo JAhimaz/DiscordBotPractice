@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'hello',
+  cooldown: 3,
 	description: 'Say Hello to the wonderful Bot <3',
   guildOnly: true,
 	execute(message, args) {
