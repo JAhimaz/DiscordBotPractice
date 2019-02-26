@@ -14,4 +14,5 @@ Currently Features:
 > Owner
 > Server
 > Purge
+> Donate
 ```
