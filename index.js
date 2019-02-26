@@ -12,8 +12,7 @@ bot.on('message', async message => {
     message.channel.send(`Server Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}`);
   } else if(command === "owner"){
     message.reply(`The Owner Of The Server is ${message.author.username}`);
-  }
-  if(command === "purge") {
+  } else if(command === "purge") {
     const deleteCount = parseInt(args[0], 10);
 
     if(!deleteCount || deleteCount < 2 || deleteCount > 100)
@@ -22,6 +21,14 @@ bot.on('message', async message => {
     const fetched = await message.channel.fetchMessages({limit: deleteCount});
     message.channel.bulkDelete(fetched)
       .catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+  } else if (command === 'avatar') {
+  	if (!message.mentions.users.size) {
+  		return message.channel.send(`Your avatar: <${message.author.displayAvatarURL}>`);
+  	}
+    const avatarList = message.mentions.users.map(user => {
+  		return `${user.username}'s avatar: <${user.displayAvatarURL}>`;
+  	});
+  	message.channel.send(avatarList);
   }
 });
 
