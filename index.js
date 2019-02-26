@@ -1,34 +1,39 @@
+const fs = require('fs');
+
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 const bot = new Discord.Client();
+bot.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	bot.commands.set(command.name, command);
+}
 
 bot.on('message', async message => {
   if(!message.content.startsWith(prefix) || message.author.bot) return; //Ignores itself
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
-  const command = args.shift().toLowerCase();
+  const commandName = args.shift().toLowerCase();
 
-  if(command === "server"){
-    message.channel.send(`Server Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}`);
-  } else if(command === "owner"){
-    message.reply(`The Owner Of The Server is ${message.author.username}`);
-  } else if(command === "purge") {
-    const deleteCount = parseInt(args[0], 10);
+  if (!bot.commands.has(commandName)) return;
+  const command = bot.commands.get(commandName);
+  //Error Checking
+  if (command.guildOnly && message.channel.type !== 'text') {
+	   return message.reply(`Sorry Babe, I know you like to slide into my DM\'s but I can\'t do that here.\nI Only Works In Servers, Please Feel Free To Add Me To One (I'm Lonely, Please...)`);
+  }
 
-    if(!deleteCount || deleteCount < 2 || deleteCount > 100)
-      return message.reply(`\nPlease provide a number between 2 and 100 for the number of messages to delete\nFor Example: \`${prefix}purge 3\``);
+  if (command.args && !args.length) {
+		return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+	}
 
-    const fetched = await message.channel.fetchMessages({limit: deleteCount});
-    message.channel.bulkDelete(fetched)
-      .catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
-  } else if (command === 'avatar') {
-  	if (!message.mentions.users.size) {
-  		return message.channel.send(`Your avatar: <${message.author.displayAvatarURL}>`);
-  	}
-    const avatarList = message.mentions.users.map(user => {
-  		return `${user.username}'s avatar: <${user.displayAvatarURL}>`;
-  	});
-  	message.channel.send(avatarList);
+  try {
+  	command.execute(message, args);
+  } catch (error) {
+  	console.error(error);
+  	message.reply('there was an error trying to execute that command!');
   }
 });
 
