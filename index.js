@@ -68,14 +68,23 @@ bot.on('message', async message => {
 });
 
 bot.once('ready', () => {
-  console.log(`Loading Commands\n------------------`);
+	console.log(`------------------\nStarting Bot\n------------------`);
+  console.log(`Loading Commands:`);
   for (const file of commandFiles) {
     let fileName = file.slice(0, file.length-3);
-    console.log(`Loaded ${prefix}${fileName}`);
+    console.log(`${prefix}${fileName} has been loaded!`);
   } console.log(`------------------`);
   console.log(`Bot has started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} guilds.`);
   console.log(`~~ Thanks For Using ServeBot! @Joshhh`);
   bot.user.setActivity(`around with JS | ${prefix}help`);
 })
+
+bot.on("guildMemberAdd", (member) => {
+	let guild = member.guild; // Reading property `guild` of guildmember object.
+	let memberTag = member.user.tag; // GuildMembers don't have a tag property, read property user of guildmember to get the user object from it
+	if(guild.systemChannel){ // Checking if it's not null
+		guild.systemChannel.send(memberTag + ", Welcome to the Legionary Of Memes!");
+	}
+});
 
 bot.login(token);
