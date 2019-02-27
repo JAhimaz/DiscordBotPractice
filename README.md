@@ -18,4 +18,5 @@ Currently Features:
 > Donate
 > Flip
 > Roll
+> RandomNumber
 ```
